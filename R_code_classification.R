@@ -37,4 +37,45 @@ percentages =  frequencies * 100 / tot
 # class 2: medium energy level: 41.4%
 # class 3: lowest energy level: 37.3%
 
+#---- Grand Canyon exercise
 
+gc <- brick("dolansprings_oli_2013088_canyon_lrg.jpg")
+gc
+
+plotRGB(gc, 1, 2, 3, stretch="lin")
+
+# The image is quite big; let's crop it!
+gcc <- crop(gc, drawExtent())
+plotRGB(gcc, 1, 2, 3, stretch="lin")
+
+ncell(gc)
+ncell(gcc)
+
+
+
+# 1- Get values
+singlenr <- getValues(gcc) # terra::values function for terra package
+singlenr
+
+# 2. Classify
+kcluster <- kmeans(singlenr, centers = 3)
+kcluster
+
+
+# 3. Set values
+gcclass <- setValues(gcc[[1]], kcluster$cluster) # assign new values to a raster object
+gcclass
+
+plot(gcclass)
+
+# class 1: volcanic rocks
+# class 2: sandstone
+# class 3: conglomerates
+
+frequencies <- freq(gcclass)
+frequencies
+
+total <- ncell(gcclass)
+
+percentages <- frequencies * 100 / total
+percentages
